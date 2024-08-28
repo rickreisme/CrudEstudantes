@@ -1,0 +1,9 @@
+@import './base.css';
+@import 'bootstrap';
+
+.custom-toast{
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
