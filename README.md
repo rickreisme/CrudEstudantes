@@ -19,31 +19,48 @@ Esse é um projeto simples feito para treinar as operações CRUD e aprimorar ha
 ### Pré-requisitos
 
 Certifique-se de ter as seguintes ferramentas instaladas:
+
 - [Node.js](https://nodejs.org/) (recomendado versão LTS)
 - [Docker](https://www.docker.com/products/docker-desktop)
 
 ### Configuração do Projeto
 
-1. **Clone o repositório:**
+1.  **Clone o repositório:**
 
     ```bash
     git clone https://github.com/rickreisme/CrudEstudantes
     cd CrudEstudantes
     ```
 
-2. **Crie um arquivo `.env` na raiz do diretório `backend` e defina a variável `DB_PASSWORD`:**
+2.  **Crie um arquivo `.env` na raiz do projeto e defina as variáveis de ambiente:**
 
     ```env
+    DB_USER=seu_usuario_do_banco_de_dados
     DB_PASSWORD=sua_senha_do_banco_de_dados
+    DB_HOST=seu_host_do_banco_de_dados
+    DB_NAME=o_nome_do_banco_de_dados
+    DB_PORT=a_porta_do_seu_banco_de_dados
+    VITE_API_URL=url_da_api
     ```
 
-3. **Inicie todos os serviços com Docker:**
+    **Se você só vai rodar o projeto no dockerfile, defina as variáveis de ambiente para os valores padrões:**
+
+    ```env
+    DB_USER=dbuser
+    DB_PASSWORD=dbpassword
+    DB_HOST=postgresql
+    DB_NAME=meubanco
+    DB_PORT=5432
+    VITE_API_URL=http://localhost:3000
+    ```
+
+3.  **Inicie todos os serviços com Docker:**
 
     ```bash
     docker-compose up
     ```
 
-   Isso iniciará tanto o backend quanto o frontend, além do banco de dados, usando o Docker.
+    Isso iniciará tanto o backend quanto o frontend, além do banco de dados, usando o Docker.
 
 ### Desenvolvimento Frontend
 
@@ -51,16 +68,16 @@ Se você precisar rodar o frontend separadamente em um ambiente de desenvolvimen
 
 1. **Instale as dependências do frontend:**
 
-    ```bash
-    cd frontend
-    npm install
-    ```
+   ```bash
+   cd frontend
+   npm install
+   ```
 
 2. **Inicie o servidor de desenvolvimento do frontend:**
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
    **Nota:** Se você estiver usando Docker para rodar todos os serviços, não é necessário rodar o frontend separadamente.
 
@@ -71,11 +88,11 @@ Após iniciar os serviços com Docker, você pode acessar o frontend no navegado
 ### Scripts
 
 - **Frontend:**
+
   - `npm run dev` - Inicia o servidor de desenvolvimento do Vue.js.
 
 - **Backend:**
   - `npm start` - Inicia o servidor Express.
-
 
 ---
 
