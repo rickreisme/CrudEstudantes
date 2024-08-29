@@ -88,11 +88,11 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
 import { formatPhoneNumber } from '../../utils/formatPhoneNumber'
 
 export default {
