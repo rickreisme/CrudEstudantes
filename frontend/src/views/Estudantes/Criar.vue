@@ -182,10 +182,13 @@ export default {
         })
       } catch (error) {
         console.error('Erro ao adicionar estudante', error)
-        this.errorMessage =
-          error.response && error.response.data.error
-            ? error.response.data.error
-            : 'Erro ao adicionar estudante!'
+
+        if (error.response && error.response.data.error === 409) {
+          this.errorMessage = error.response.data.error
+        } else {
+          this.errorMessage = 'Erro ao adicionar estudante!'
+        }
+
         this.successMessage = ''
         this.$nextTick(() => {
           this.showToast('errorToast', this.errorMessage)
