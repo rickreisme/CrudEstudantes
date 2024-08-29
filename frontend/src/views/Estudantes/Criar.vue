@@ -97,9 +97,16 @@ import { formatPhoneNumber } from '../../utils/formatPhoneNumber'
 export default {
   name: 'estudanteCriar',
   setup() {
+    const model = ref({
+      estudante: {
+        nome: '',
+        curso: '',
+        email: '',
+        telefone: ''
+      }
+    })
     const successMessage = ref('')
     const errorMessage = ref('')
-    const estudantes = ref([])
 
     function showToast(id, message) {
       const toastElemment = document.getElementById(id)
@@ -113,80 +120,66 @@ export default {
         toast.show()
       }
     }
-    return {
-      successMessage,
-      errorMessage,
-      showToast
+
+    function formatNumber() {
+      model.value.estudante.telefone = formatPhoneNumber(
+        model.value.estudante.telefone
+      )
     }
-  },
-  data() {
-    return {
-      model: {
-        estudante: {
-          nome: '',
-          curso: '',
-          email: '',
-          telefone: ''
-        }
-      }
-    }
-  },
-  methods: {
-    isValidEmail(email) {
+
+    function isValidEmail(email) {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       return emailPattern.test(email)
-    },
+    }
 
-    formatNumber() {
-      this.model.estudante.telefone = formatPhoneNumber(
-        this.model.estudante.telefone
-      )
-    },
-
-    async saveEstudante() {
-      console.log('Dados:', this.model.estudante)
+    async function saveEstudante() {
+      console.log('Dados:', model.value.estudante)
 
       if (
-        !this.model.estudante.nome ||
-        !this.model.estudante.curso ||
-        !this.model.estudante.email ||
-        !this.model.estudante.telefone
+        !model.value.estudante.nome ||
+        !model.value.estudante.curso ||
+        !model.value.estudante.email ||
+        !model.value.estudante.telefone
       ) {
-        this.errorMessage = 'Por favor, preencha todos os campos!'
-        this.$nextTick(() => {
-          this.showToast('errorToast', this.errorMessage)
-        })
+        errorMessage.value = 'Por favor, preencha todos os campos!'
+        showToast('errorToast', errorMessage.value)
         return
       }
 
-      if (!this.isValidEmail(this.model.estudante.email)) {
-        this.errorMessage = 'Digite um email válido!'
-        this.model.estudante.email = ''
-        this.$nextTick(() => {
-          this.showToast('errorToast', this.errorMessage)
-        })
+      if (!isValidEmail(model.value.estudante.email)) {
+        errorMessage.value = 'Digite um email válido!'
+        model.value.estudante.email = ''
+        showToast('errorToast', errorMessage.value)
         return
       }
 
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/estudantes`,
-          this.model.estudante
+          model.value.estudante
         )
-        this.successMessage = response.data.message
-        this.model.estudante = { nome: '', curso: '', email: '', telefone: '' }
-        this.$nextTick(() => {
-          this.showToast('successToast', this.successMessage)
-          setTimeout(() => {
-            this.$router.push('/estudantes')
-          }, 2500)
-        })
+        successMessage.value = response.data.message
+        model.value.estudante = { nome: '', curso: '', email: '', telefone: '' }
+        showToast('successToast', successMessage.value)
+        setTimeout(() => {
+          window.location.href('/estudantes')
+        }, 2500)
       } catch (error) {
         console.error('Erro ao adicionar estudante', error)
-        this.successMessage = ''
+        successMessage.value = ''
+        errorMessage.value = 'Erro ao adicionar estudante!'
+        showToast('errorToas', errorMessage.value)
       }
     }
-  },
-  formatPhoneNumber
+
+    return {
+      model,
+      successMessage,
+      errorMessage,
+      showToast,
+      formatNumber,
+      saveEstudante
+    }
+  }
 }
 </script>
