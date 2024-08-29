@@ -95,12 +95,12 @@ server.post("/estudantes", async (req, res) => {
     res.status(500).json({ error: "Erro ao adicionar estudante" });
 
     if (err.code === "23505") {
-      res
+      return res
         .status(409)
         .json({ error: "Email já registrado. Por favor, use outro email!" });
-    } else {
-      res.status(500).json({ error: "Erro ao adicionar estudante" });
     }
+
+    res.status(500).json({ error: "Erro ao adicionar estudante" });
   }
 });
 
