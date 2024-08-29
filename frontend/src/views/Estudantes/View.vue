@@ -108,7 +108,6 @@
 <script>
 import { formatDate } from '../../utils/formatDate'
 import { ref } from 'vue'
-import apiURL from '../../api.ts'
 import axios from 'axios'
 
 export default {

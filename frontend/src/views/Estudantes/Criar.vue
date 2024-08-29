@@ -52,9 +52,7 @@
             Enviar
           </button>
 
-          <RouterLink to="/estudantes"
-            class="btn btn-info"
-          >
+          <RouterLink to="/estudantes" class="btn btn-info">
             Voltar
           </RouterLink>
         </div>
@@ -90,7 +88,7 @@
 </template>
 
 <script>
-import apiURL from '../../api.ts'
+import axios from 'axios'
 import { ref } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
@@ -101,6 +99,7 @@ export default {
   setup() {
     const successMessage = ref('')
     const errorMessage = ref('')
+    const estudantes = ref([])
 
     function showToast(id, message) {
       const toastElemment = document.getElementById(id)
@@ -170,8 +169,8 @@ export default {
       }
 
       try {
-        const response = await apiURL.post(
-          '/estudantes',
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_URL}/estudantes`,
           this.model.estudante
         )
         this.successMessage = response.data.message
