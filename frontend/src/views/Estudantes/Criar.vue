@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apiURL from '../../api.ts'
 import { ref } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
@@ -170,8 +170,8 @@ export default {
       }
 
       try {
-        const response = await axios.post(
-          'http://localhost:3000/estudantes',
+        const response = await apiURL.post(
+          '/estudantes',
           this.model.estudante
         )
         this.successMessage = response.data.message

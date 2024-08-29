@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apiURL from '../../api.ts'
 import { ref } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
@@ -141,8 +141,8 @@ export default {
   },
   methods: {
     getEstudanteData(estudanteId) {
-      axios
-        .get(`http://localhost:3000/estudantes/${estudanteId}`)
+      apiURL
+        .get(`/estudantes/${estudanteId}`)
         .then((res) => {
           console.log(res.data.estudante)
           this.model.estudante.nome = res.data.estudante.nome
@@ -189,8 +189,8 @@ export default {
       }
 
       try {
-        const response = await axios.put(
-          `http://localhost:3000/estudantes/${this.estudanteId}/editar`,
+        const response = await apiURL.put(
+          `/estudantes/${this.estudanteId}/editar`,
           this.model.estudante
         )
         this.successMessage = response.data.message

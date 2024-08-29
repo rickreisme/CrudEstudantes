@@ -11,7 +11,7 @@
 
     <div class="container">
       <div class="card-body">
-        <div class="table-responsive" v-if="this.estudantes.length > 0">
+        <div class="table-responsive" v-if="estudantes.length > 0">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -25,7 +25,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="(estudante, index) in this.estudantes" :key="index">
+              <tr v-for="(estudante, index) in estudantes" :key="index">
                 <td class="text-center">{{ estudante.nome }}</td>
                 <td class="text-center">{{ estudante.curso }}</td>
                 <td class="text-center">{{ estudante.email }}</td>
@@ -106,9 +106,9 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { formatDate } from '../../utils/formatDate'
 import { ref } from 'vue'
+import apiURL from '../../api.ts'
 
 export default {
   name: 'estudantes',
@@ -132,8 +132,8 @@ export default {
 
     function getEstudantes() {
       loading.value = true
-      axios
-        .get('http://localhost:3000/estudantes')
+      apiURL
+        .get('/estudantes')
         .then((res) => {
           this.estudantes = res.data.estudantes
         })
@@ -147,8 +147,8 @@ export default {
 
     function deleteEstudante(estudanteId) {
       if (confirm('Você tem certeza de que quer exluir esse estudante?')) {
-        axios
-          .delete(`http://localhost:3000/estudantes/${estudanteId}/excluir`)
+        apiURL
+          .delete(`/estudantes/${estudanteId}/excluir`)
           .then((res) => {
             successMessage.value = res.data.message
             showToast('successToast', this.successMessage)

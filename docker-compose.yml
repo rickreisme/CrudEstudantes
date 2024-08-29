@@ -9,8 +9,11 @@ services:
     ports:
       - 3000:3000
     environment:
-      DB_USER: dbuser
+      DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
     depends_on:
       postgresql:
         condition: service_healthy
@@ -23,15 +26,15 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: dbuser
+      POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: meubanco
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - ./create-database.sql:/docker-entrypoint-initdb.d/create-database.sql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - my-db:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dbuser -d meubanco"]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
       interval: 10s
       retries: 5
       start_period: 30s
@@ -53,6 +56,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 5173:5173
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
     volumes:
       - ./frontend:/app
       - /app/node_modules

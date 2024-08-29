@@ -10,15 +10,19 @@ server.use(cors());
 server.use(express.json());
 
 const senhaBD = process.env.DB_PASSWORD;
+const userBD = process.env.DB_USER;
+const nomeBD = process.env.DB_NAME;
+const portBD = process.env.DB_PORT;
+const hostBD = process.env.DB_HOST;
 
 const estudantesPath = path.join(__dirname, "estudantes.json");
 
 const pool = new Pool({
-  user: dbuser,
-  host: "postgresql",
-  database: "meubanco",
+  user: userBD,
+  host: hostBD,
+  database: nomeBD,
   password: senhaBD,
-  port: 5432,
+  port: portBD,
 });
 
 const getEstudantes = async () => {
