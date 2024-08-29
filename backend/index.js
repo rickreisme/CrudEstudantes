@@ -9,13 +9,12 @@ require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 server.use(cors());
 server.use(express.json());
 
-const userBD = process.env.DB_USER;
 const senhaBD = process.env.DB_PASSWORD;
 
 const estudantesPath = path.join(__dirname, "estudantes.json");
 
 const pool = new Pool({
-  user: userBD,
+  user: dbuser,
   host: "postgresql",
   database: "meubanco",
   password: senhaBD,
