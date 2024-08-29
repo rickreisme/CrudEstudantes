@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run build
 
-CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "serve", "--", "-s", "dist", "-l", "5173"]
 
 EXPOSE 5173
