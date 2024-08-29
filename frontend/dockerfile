@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run build
 
-CMD ["npm", "serve", "-s", "dist", "-l", "5173"]
+CMD ["npx", "serve", "-s", "dist", "-l", "5173"]
 
 EXPOSE 5173
