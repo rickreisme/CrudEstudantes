@@ -88,102 +88,104 @@
 </template>
 
 <script>
-import { ref, nextTick } from 'vue'
+import axios from 'axios'
+import { ref } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
 import { formatPhoneNumber } from '../../utils/formatPhoneNumber'
 
 export default {
   name: 'estudanteCriar',
   setup() {
-    const router = useRouter()
-    const model = ref({
-      estudante: {
-        nome: '',
-        curso: '',
-        email: '',
-        telefone: ''
-      }
-    })
     const successMessage = ref('')
     const errorMessage = ref('')
 
     function showToast(id, message) {
-      const toastElement = document.getElementById(id)
-      if (toastElement) {
-        const toastBody = toastElement.querySelector('.toast-body')
-        if (toastBody) {
-          toastBody.textContent = message
-          const toast = new bootstrap.Toast(toastElement, {
-            autohide: true,
-            delay: 3000
-          })
-          toast.show()
+      const toastElemment = document.getElementById(id)
+
+      if (toastElemment) {
+        toastElemment.innerHTML = message
+        const toast = new bootstrap.Toast(toastElemment, {
+          autohide: true,
+          delay: 3000
+        })
+        toast.show()
+      }
+    }
+    return {
+      successMessage,
+      errorMessage,
+      showToast
+    }
+  },
+  data() {
+    return {
+      model: {
+        estudante: {
+          nome: '',
+          curso: '',
+          email: '',
+          telefone: ''
         }
       }
     }
-
-    function formatNumber() {
-      model.value.estudante.telefone = formatPhoneNumber(
-        model.value.estudante.telefone
-      )
-    }
-
-    function isValidEmail(email) {
+  },
+  methods: {
+    isValidEmail(email) {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       return emailPattern.test(email)
-    }
+    },
 
-    async function saveEstudante() {
-      console.log('Dados:', model.value.estudante)
+    formatNumber() {
+      this.model.estudante.telefone = formatPhoneNumber(
+        this.model.estudante.telefone
+      )
+    },
+
+    async saveEstudante() {
+      console.log('Dados:', this.model.estudante)
 
       if (
-        !model.value.estudante.nome ||
-        !model.value.estudante.curso ||
-        !model.value.estudante.email ||
-        !model.value.estudante.telefone
+        !this.model.estudante.nome ||
+        !this.model.estudante.curso ||
+        !this.model.estudante.email ||
+        !this.model.estudante.telefone
       ) {
-        errorMessage.value = 'Por favor, preencha todos os campos!'
-        showToast('errorToast', errorMessage.value)
+        this.errorMessage = 'Por favor, preencha todos os campos!'
+        this.$nextTick(() => {
+          this.showToast('errorToast', this.errorMessage)
+        })
         return
       }
 
-      if (!isValidEmail(model.value.estudante.email)) {
-        errorMessage.value = 'Digite um email válido!'
-        model.value.estudante.email = ''
-        showToast('errorToast', errorMessage.value)
+      if (!this.isValidEmail(this.model.estudante.email)) {
+        this.errorMessage = 'Digite um email válido!'
+        this.model.estudante.email = ''
+        this.$nextTick(() => {
+          this.showToast('errorToast', this.errorMessage)
+        })
         return
       }
 
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/estudantes`,
-          model.value.estudante
+          this.model.estudante
         )
-        successMessage.value = response.data.message
-        model.value.estudante = { nome: '', curso: '', email: '', telefone: '' }
-        showToast('successToast', successMessage.value)
-        setTimeout(() => {
-          router.push('/estudantes')
-        }, 2500)
+        this.successMessage = response.data.message
+        this.model.estudante = { nome: '', curso: '', email: '', telefone: '' }
+        this.$nextTick(() => {
+          this.showToast('successToast', this.successMessage)
+          setTimeout(() => {
+            this.$router.push('/estudantes')
+          }, 2500)
+        })
       } catch (error) {
         console.error('Erro ao adicionar estudante', error)
-        successMessage.value = ''
-        errorMessage.value = 'Erro ao adicionar estudante!'
-        showToast('errorToast', errorMessage.value)
+        this.successMessage = ''
       }
     }
-
-    return {
-      model,
-      successMessage,
-      errorMessage,
-      showToast,
-      formatNumber,
-      saveEstudante
-    }
-  }
+  },
+  formatPhoneNumber
 }
 </script>
