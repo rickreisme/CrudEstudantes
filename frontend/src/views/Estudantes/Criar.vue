@@ -89,6 +89,7 @@
 
 <script>
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
@@ -97,6 +98,7 @@ import { formatPhoneNumber } from '../../utils/formatPhoneNumber'
 export default {
   name: 'estudanteCriar',
   setup() {
+    const router = useRouter()
     const model = ref({
       estudante: {
         nome: '',
@@ -162,7 +164,7 @@ export default {
         model.value.estudante = { nome: '', curso: '', email: '', telefone: '' }
         showToast('successToast', successMessage.value)
         setTimeout(() => {
-          window.location.href('/estudantes')
+          router.push('/estudantes')
         }, 2500)
       } catch (error) {
         console.error('Erro ao adicionar estudante', error)
