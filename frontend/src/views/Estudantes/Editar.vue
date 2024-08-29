@@ -47,7 +47,7 @@
           />
         </div>
 
-        <div class="mb-3">
+        <div class="d-flex justify-content-between mb-3">
           <button
             type="button"
             @click="editarEstudante"
@@ -55,6 +55,10 @@
           >
             Editar
           </button>
+
+          <RouterLink to="/estudantes" class="btn btn-info">
+            Voltar
+          </RouterLink>
         </div>
       </form>
 
@@ -194,7 +198,7 @@ export default {
           this.showToast('successToast', this.successMessage)
           setTimeout(() => {
             this.$router.push('/estudantes')
-          }, 2500);
+          }, 2500)
         })
       } catch (error) {
         console.error('Erro ao adicionar estudante', error)

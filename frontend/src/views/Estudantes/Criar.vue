@@ -47,10 +47,16 @@
           />
         </div>
 
-        <div class="mb-3">
+        <div class="d-flex justify-content-between mb-3">
           <button type="button" @click="saveEstudante" class="btn btn-primary">
             Enviar
           </button>
+
+          <RouterLink to="/estudantes"
+            class="btn btn-info"
+          >
+            Voltar
+          </RouterLink>
         </div>
       </form>
 
