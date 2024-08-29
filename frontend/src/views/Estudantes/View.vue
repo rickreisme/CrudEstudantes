@@ -109,6 +109,7 @@
 import { formatDate } from '../../utils/formatDate'
 import { ref } from 'vue'
 import apiURL from '../../api.ts'
+import axios from 'axios'
 
 export default {
   name: 'estudantes',
@@ -132,8 +133,8 @@ export default {
 
     async function getEstudantes() {
       loading.value = true
-      apiURL
-        .get('/estudantes')
+      axios
+        .get(`${import.meta.env.VITE_API_URL}/estudantes`)
         .then((res) => {
           estudantes.value = res.data.estudantes || []
         })
@@ -147,14 +148,12 @@ export default {
 
     async function deleteEstudante(estudanteId) {
       if (confirm('Você tem certeza de que quer exluir esse estudante?')) {
-        apiURL
-          .delete(`/estudantes/${estudanteId}/excluir`)
-          .then((res) => {
-            successMessage.value = res.data.message
-            showToast('successToast', this.successMessage)
+        axios.delete(`${import.meta.env.VITE_API_URL}/estudantes/${estudanteId}/excluir`).then((res) => {
+          successMessage.value = res.data.message
+          showToast('successToast', this.successMessage)
 
-            getEstudantes()
-          })
+          getEstudantes()
+        })
       }
     }
     return {
