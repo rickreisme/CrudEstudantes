@@ -111,15 +111,18 @@ export default {
     const errorMessage = ref('')
 
     function showToast(id, message) {
-      const toastElemment = document.getElementById(id)
+      const toastElement = document.getElementById(id)
 
-      if (toastElemment) {
-        toastElemment.innerHTML = message
-        const toast = new bootstrap.Toast(toastElemment, {
-          autohide: true,
-          delay: 3000
-        })
-        toast.show()
+      if (toastElement) {
+        const toastBody = toastElement.querySelector('.toast-body')
+        if (toastBody) {
+          toastBody.textContent = message
+          const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 3000
+          })
+          toast.show()
+        }
       }
     }
 
@@ -170,7 +173,7 @@ export default {
         console.error('Erro ao adicionar estudante', error)
         successMessage.value = ''
         errorMessage.value = 'Erro ao adicionar estudante!'
-        showToast('errorToas', errorMessage.value)
+        showToast('errorToast', errorMessage.value)
       }
     }
 
