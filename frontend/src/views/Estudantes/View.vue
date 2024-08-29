@@ -135,7 +135,7 @@ export default {
       apiURL
         .get('/estudantes')
         .then((res) => {
-          estudantes.value = res.data.estudantes
+          estudantes.value = res.data.estudantes || []
         })
         .catch(() => {
           estudantes.value = []
