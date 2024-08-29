@@ -118,6 +118,8 @@ export default {
     const loading = ref(true)
     const estudantes = ref([])
 
+    console.log(import.meta.env.VITE_API_URL);
+
     function showToast(id, message) {
       const toastElemment = document.getElementById(id)
 
@@ -137,9 +139,13 @@ export default {
         .get(`${import.meta.env.VITE_API_URL}/estudantes`)
         .then((res) => {
           estudantes.value = res.data.estudantes || []
+          console.log(import.meta.env.VITE_API_URL);
+
         })
         .catch(() => {
           estudantes.value = []
+          console.log(import.meta.env.VITE_API_URL);
+
         })
         .finally(() => {
           loading.value = false
