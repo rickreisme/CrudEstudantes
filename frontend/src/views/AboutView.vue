@@ -14,11 +14,12 @@
       <h3>Tecnologias utilizadas:</h3>
 
       <span>Vue.js</span> <br />
+      <span>Bootstrap</span> <br />
       <span>Node.js</span> <br />
       <span>Express</span> <br />
       <span>Axios</span> <br />
       <span>PostgreSQL</span> <br />
-      <span>Docker</span> <br />
+      <span>Docker</span>
     </div>
   </main>
 </template>
