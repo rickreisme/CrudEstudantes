@@ -118,7 +118,7 @@ export default {
     const loading = ref(true)
     const estudantes = ref([])
 
-    console.log(import.meta.env.VITE_API_URL)
+    console.log(import.meta.env.VITE_API_URL);
 
     function showToast(id, message) {
       const toastElemment = document.getElementById(id)
@@ -136,14 +136,16 @@ export default {
     async function getEstudantes() {
       loading.value = true
       axios
-        .get('https://crudestudantes-backend.onrender.com/estudantes')
+        .get(`${import.meta.env.VITE_API_URL}/estudantes`)
         .then((res) => {
           estudantes.value = res.data.estudantes || []
-          console.log(import.meta.env.VITE_API_URL)
+          console.log(import.meta.env.VITE_API_URL);
+
         })
         .catch(() => {
           estudantes.value = []
-          console.log(import.meta.env.VITE_API_URL)
+          console.log(import.meta.env.VITE_API_URL);
+
         })
         .finally(() => {
           loading.value = false
@@ -152,16 +154,12 @@ export default {
 
     async function deleteEstudante(estudanteId) {
       if (confirm('Você tem certeza de que quer exluir esse estudante?')) {
-        axios
-          .delete(
-            `https://crudestudantes-backend.onrender.com/estudantes/${estudanteId}/excluir`
-          )
-          .then((res) => {
-            successMessage.value = res.data.message
-            showToast('successToast', this.successMessage)
+        axios.delete(`${import.meta.env.VITE_API_URL}/estudantes/${estudanteId}/excluir`).then((res) => {
+          successMessage.value = res.data.message
+          showToast('successToast', this.successMessage)
 
-            getEstudantes()
-          })
+          getEstudantes()
+        })
       }
     }
     return {
