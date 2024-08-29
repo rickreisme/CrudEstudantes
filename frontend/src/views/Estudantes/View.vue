@@ -11,7 +11,7 @@
 
     <div class="container">
       <div class="card-body">
-        <div class="table-responsive">
+        <div class="table-responsive" v-if="this.estudantes.length > 0">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -24,7 +24,7 @@
               </tr>
             </thead>
 
-            <tbody v-if="this.estudantes.length > 0">
+            <tbody>
               <tr v-for="(estudante, index) in this.estudantes" :key="index">
                 <td class="text-center">{{ estudante.nome }}</td>
                 <td class="text-center">{{ estudante.curso }}</td>
@@ -53,17 +53,27 @@
                 </td>
               </tr>
             </tbody>
-
-            <tbody v-else>
-              <tr>
-                <td colspan="7" class="text-center">
-                  <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
           </table>
+        </div>
+
+        <div
+          v-else-if="!loading && estudantes.length === 0"
+          class="text-center"
+        >
+          <div class="card">
+            <div class="card-body">
+              <h5>Nenhum estudante foi encontrado</h5>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="loading" class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+          <div>
+            <h6>Buscando Estudantes...</h6>
+          </div>
         </div>
       </div>
     </div>
@@ -104,7 +114,8 @@ export default {
   name: 'estudantes',
   setup() {
     const successMessage = ref('')
-    const errorMessage = ref('')
+    const loading = ref(true)
+    const estudantes = ref([])
 
     function showToast(id, message) {
       const toastElemment = document.getElementById(id)
@@ -118,41 +129,47 @@ export default {
         toast.show()
       }
     }
-    return {
-      successMessage,
-      showToast
+
+    function getEstudantes() {
+      loading.value = true
+      axios
+        .get('http://localhost:3000/estudantes')
+        .then((res) => {
+          this.estudantes = res.data.estudantes
+        })
+        .catch(() => {
+          estudantes.value = []
+        })
+        .finally(() => {
+          loading.value = false
+        })
     }
-  },
-  data() {
+
+    function deleteEstudante(estudanteId) {
+      if (confirm('Você tem certeza de que quer exluir esse estudante?')) {
+        axios
+          .delete(`http://localhost:3000/estudantes/${estudanteId}/excluir`)
+          .then((res) => {
+            successMessage.value = res.data.message
+            showToast('successToast', this.successMessage)
+
+            getEstudantes()
+          })
+      }
+    }
     return {
-      estudantes: []
+      estudantes,
+      successMessage,
+      loading,
+      showToast,
+      getEstudantes,
+      deleteEstudante,
+      formatDate
     }
   },
 
   mounted() {
     this.getEstudantes()
-  },
-  methods: {
-    getEstudantes() {
-      axios.get('http://localhost:3000/estudantes').then((res) => {
-        this.estudantes = res.data.estudantes
-      })
-    },
-    formatDate,
-    deleteEstudante(estudanteId) {
-      if (confirm('Tem certeza que quer exluir esse estudante?')) {
-        console.log(estudanteId)
-
-        axios
-          .delete(`http://localhost:3000/estudantes/${estudanteId}/excluir`)
-          .then((res) => {
-            this.successMessage = res.data.message
-            this.showToast('successToast', this.successMessage)
-
-            this.getEstudantes()
-          })
-      }
-    }
   }
 }
 </script>

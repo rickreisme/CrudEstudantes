@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app/backend
+
+  postgresql:
+    container_name: postgresql_database
+    image: postgres:15.0
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: meubanco
+    volumes:
+      - ./create-database.sql:/docker-entrypoint-initdb.d/create-database.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - my-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dbuser -d meubanco"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  # pgadmin:
+  #   container_name: pgadmin
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
+  #     PGADMIN_DEFAULT_PASSWORD: dbpassword
+  #   ports:
+  #     - 8082:80
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 5173:5173
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  my-db:

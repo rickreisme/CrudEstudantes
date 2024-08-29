@@ -4,8 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
 const { Pool } = require("pg");
-const { password } = require("pg/lib/defaults");
-require("dotenv").config();
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 server.use(cors());
 server.use(express.json());
@@ -17,8 +16,8 @@ const estudantesPath = path.join(__dirname, "estudantes.json");
 
 const pool = new Pool({
   user: userBD,
-  host: "localhost",
-  databse: "dbuser",
+  host: "postgresql",
+  database: "meubanco",
   password: senhaBD,
   port: 5432,
 });
@@ -38,7 +37,9 @@ const getEstudante = async (id) => {
   const client = await pool.connect();
 
   try {
-    const res = await client.query("SELECT * FROM tb_estudante WHERE id = $1", [id]);
+    const res = await client.query("SELECT * FROM tb_estudante WHERE id = $1", [
+      id,
+    ]);
     return res.rows;
   } finally {
     client.release();
@@ -114,7 +115,7 @@ server.put("/estudantes/:id/editar", async (req, res) => {
         SET nome = $1, curso = $2, email = $3, telefone = $4
         WHERE id = $5
         RETURNING*`,
-        [nome, curso, email, telefone, id]
+      [nome, curso, email, telefone, id]
     );
 
     if (result.rowCount === 0) {
@@ -132,14 +133,14 @@ server.put("/estudantes/:id/editar", async (req, res) => {
 });
 
 server.delete("/estudantes/:id/excluir", async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
 
   try {
     const result = await pool.query(
       `DELETE FROM tb_estudante
         WHERE id = $1
         RETURNING*`,
-        [id]
+      [id]
     );
 
     if (result.rowCount === 0) {
@@ -154,7 +155,7 @@ server.delete("/estudantes/:id/excluir", async (req, res) => {
     console.error("Erro ao excluir estudante: ", err);
     res.status(500).json({ error: "Erro ao excluir estudante" });
   }
-})
+});
 
 server.listen(3000, () => {
   console.log("Servidor rodando na porta 3000");
