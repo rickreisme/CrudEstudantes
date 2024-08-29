@@ -130,12 +130,12 @@ export default {
       }
     }
 
-    function getEstudantes() {
+    async function getEstudantes() {
       loading.value = true
       apiURL
         .get('/estudantes')
         .then((res) => {
-          this.estudantes = res.data.estudantes
+          estudantes.value = res.data.estudantes || []
         })
         .catch(() => {
           estudantes.value = []
@@ -145,7 +145,7 @@ export default {
         })
     }
 
-    function deleteEstudante(estudanteId) {
+    async function deleteEstudante(estudanteId) {
       if (confirm('Você tem certeza de que quer exluir esse estudante?')) {
         apiURL
           .delete(`/estudantes/${estudanteId}/excluir`)
