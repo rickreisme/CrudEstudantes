@@ -111,19 +111,20 @@ export default {
     const errorMessage = ref('')
 
     function showToast(id, message) {
-      const toastElement = document.getElementById(id)
-
-      if (toastElement) {
-        const toastBody = toastElement.querySelector('.toast-body')
-        if (toastBody) {
-          toastBody.textContent = message
-          const toast = new bootstrap.Toast(toastElement, {
-            autohide: true,
-            delay: 3000
-          })
-          toast.show()
+      nextTick(() => {
+        const toastElement = document.getElementById(id)
+        if (toastElement) {
+          const toastBody = toastElement.querySelector('.toast-body')
+          if (toastBody) {
+            toastBody.textContent = message
+            const toast = new bootstrap.Toast(toastElement, {
+              autohide: true,
+              delay: 3000
+            })
+            toast.show()
+          }
         }
-      }
+      })
     }
 
     function formatNumber() {
