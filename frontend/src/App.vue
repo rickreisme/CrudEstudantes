@@ -64,7 +64,7 @@ const currentYear = new Date().getFullYear()
       {{ currentYear }}
       <a
         class="link-light link-opacity-50-hover text-decoration-none"
-        href="https://rickreisme-portfolio.vercel.app"
+        href="https://rickreisme.vercel.app"
         target="_blank"
         ><span>&lt;rickreisme/&gt;</span></a
       >
